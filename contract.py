@@ -35,7 +35,7 @@ compiled_sol = compile_standard({
 })
 bytecode = compiled_sol['contracts']['Greeter.sol']['Greeter']['evm']['bytecode']['object']
 abi = json.loads(compiled_sol['contracts']['Greeter.sol']['Greeter']['metadata'])['output']['abi']
-W3 = Web3(WebsocketProvider('wss://ropsten.infura.io/ws/v3/%s'%infuraKey))
+W3 = Web3(WebsocketProvider('wss://ropsten.infura.io/ws/v3/%s'%infuraKeybf3c457f615a4a898d705402d2fb0370))
 account1=Account.from_key(privateKey);
 address1=account1.address
 Greeter = W3.eth.contract(abi=abi, bytecode=bytecode)
@@ -77,8 +77,6 @@ if tx_receipt is None:
 
 
 
-#Check the contract address before calling the greet function, and construct the instance with the correct address:
-
 print("Contract address is:",tx_receipt.contractAddress)
 
 greeter = W3.eth.contract(
@@ -89,11 +87,6 @@ greeter = W3.eth.contract(
 
 print("Output from greet()")
 print(greeter.functions.greet().call())
-
-#***Set the contract address if you have deployed through Remix/MetaMask
-
-#:Adjust the transaction / raw transaction code as follows:
-
 
 
 nonce = W3.eth.getTransactionCount(address1)
