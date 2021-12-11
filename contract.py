@@ -35,7 +35,7 @@ compiled_sol = compile_standard({
 })
 bytecode = compiled_sol['contracts']['Greeter.sol']['Greeter']['evm']['bytecode']['object']
 abi = json.loads(compiled_sol['contracts']['Greeter.sol']['Greeter']['metadata'])['output']['abi']
-W3 = Web3(WebsocketProvider('wss://ropsten.infura.io/ws/v3/%s'%infuraKeybf3c457f615a4a898d705402d2fb0370))
+W3 = Web3(WebsocketProvider('wss://ropsten.infura.io/ws/v3/%s'%infuraKey))
 account1=Account.from_key(privateKey);
 address1=account1.address
 Greeter = W3.eth.contract(abi=abi, bytecode=bytecode)
@@ -51,71 +51,4 @@ tx_dict = Greeter.constructor().buildTransaction({
   'nonce': nonce,
   'from':address1
 })
-
-signed_txn = W3.eth.account.sign_transaction(tx_dict, private_key=privateKey)
-#diagnostics
-#print(signed_txn)
-print("Deploying the Smart Contract")
-result = W3.eth.sendRawTransaction(signed_txn.rawTransaction)
-#diagnostics
-#print(result)
-#print('-----------------------------------')
-tx_receipt = None#W3.eth.getTransactionReceipt(result)
-
-count = 0
-while tx_receipt is None and (count < 30):
-  time.sleep(10)
-  try:
-    tx_receipt = W3.eth.getTransactionReceipt(result)
-  except:
-    print('.')
-
-if tx_receipt is None:
-  print (" {'status': 'failed', 'error': 'timeout'} ")
-#diagnostics
-#print (tx_receipt)
-
-
-
-print("Contract address is:",tx_receipt.contractAddress)
-
-greeter = W3.eth.contract(
-  address=tx_receipt.contractAddress,
-  abi=abi
-)
-
-
-print("Output from greet()")
-print(greeter.functions.greet().call())
-
-
-nonce = W3.eth.getTransactionCount(address1)
-tx_dict = greeter.functions.setGreeting('Nihao').buildTransaction({
-  'chainId': 3,
-  'gas': 1400000,
-  'gasPrice': w3.toWei('40', 'gwei'),
-  'nonce': nonce,
-  'from':address1
-})
-
-signed_txn = W3.eth.account.sign_transaction(tx_dict, private_key=privateKey)
-result = W3.eth.sendRawTransaction(signed_txn.rawTransaction)
-tx_receipt = None#W3.eth.getTransactionReceipt(result)
-
-count = 0
-while tx_receipt is None and (count < 30):
-  time.sleep(20)
-  try:
-    tx_receipt = W3.eth.getTransactionReceipt(result)
-  except:
-    print('.')
-
-if tx_receipt is None:
-  print (" {'status': 'failed', 'error': 'timeout'} ")
-
-#tx_hash = greeter.functions.setGreeting('Nihao').transact({"from":account1.address})
-#tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-print("Output from greet()")
-print(greeter.functions.greet().call({"from":account1.address}))
-#'Nihao'
 
