@@ -77,7 +77,7 @@ if tx_receipt is None:
 
 
 
-Check the contract address before calling the greet function, and construct the instance with the correct address:
+#Check the contract address before calling the greet function, and construct the instance with the correct address:
 
 print("Contract address is:",tx_receipt.contractAddress)
 
@@ -92,7 +92,7 @@ print(greeter.functions.greet().call())
 
 #***Set the contract address if you have deployed through Remix/MetaMask
 
-:Adjust the transaction / raw transaction code as follows:
+#:Adjust the transaction / raw transaction code as follows:
 
 
 
